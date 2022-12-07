@@ -67,10 +67,14 @@ def fixSize(tree):
         
 
 total = 0
+smallest = 0
+maxSizeFree = 0
 def readTree(tree):
     global total
-    if tree.type == 'dir' and tree.size <= 100000:
-        #print(tree.name + ', ' + str(tree.size))
+    global smallest
+    if tree.type == 'dir':
+        if tree.size < smallest and tree.size >= maxSizeFree:
+            smallest = tree.size
         total += tree.size
     for child in tree.children:
         readTree(tree.children[child])
@@ -81,6 +85,10 @@ if __name__ == "__main__":
         lines = f.read().splitlines()
     lines = lines[1:]
     main = generateTree("/", 1)
-    # # fixSize(main)
+    totalSize = main.size
+    maxSizeFree = 70000000 - totalSize
+    maxSizeFree = 30000000 - maxSizeFree
+    smallest = totalSize
     readTree(main)
+    print(smallest)
     print(total)
